@@ -209,7 +209,7 @@ int draw_map(t_state *state)
       // switch(worldMap[mapX][mapY])
       switch(get_map_tile(mapX, mapY))
       {
-        case 1:  color = 0x00FF0000;  break; //red
+        case 1:  color = create_trgb(240,255,0,0);  break; //red
         case 2:  color = 0x00008000;  break; //green
         case 3:  color = 0x000000FF;  break; //blue
         case 4:  color = 0x00FFFFFF;  break; //white
