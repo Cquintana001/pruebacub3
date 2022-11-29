@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:05 by manu              #+#    #+#             */
-/*   Updated: 2022/11/19 12:06:06 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/11/29 11:23:20 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ typedef struct	s_data {
 	double	rotSpeed;
 	double	planeX;
 	double	planeY;
-	// void	*mlx1;
-	// void	*mlx1_win;
 	double	Oldtime;
 	double	Time;
+	int **buffer;
+	int *texture[8];
 }	t_data;
 
 typedef struct s_state

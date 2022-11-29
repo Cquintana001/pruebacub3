@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   frame.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: manu <manu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:23:37 by manu              #+#    #+#             */
-/*   Updated: 2022/11/10 22:23:40 by manu             ###   ########.fr       */
+/*   Updated: 2022/11/29 10:35:32 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define FRAME_H
 
 # include "state.h"
-# include "map.h"
 
 int	on_render_frame(t_state *state);
 

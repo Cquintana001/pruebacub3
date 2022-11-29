@@ -10,21 +10,8 @@
 
 #define mapWidth 24
 #define mapHeight 24
-
-// Movidos a state.h
-// #define screenWidth 1920
-// #define screenHeight 1080
-/* long	get_time(void)
-{
-	struct timeval	tp;
-	long			milliseconds;
-
-	gettimeofday(&tp, NULL);
-	milliseconds = tp.tv_sec;
-	milliseconds += tp.tv_usec;
-  printf("get_time: %ld\n", milliseconds);
-	return (milliseconds);
-} */
+#define texWidth 64
+#define texHeight 64
 long    get_time(void)
 {
     struct timeval  now;
@@ -69,25 +56,7 @@ int	create_trgb(int t, int r, int g, int b)
 {
 	return (t << 24 | r << 16 | g << 8 | b);
 }
-// typedef struct	s_data {
-// 	void	*img;
-// 	char	*addr;
-// 	int		bits_per_pixel;
-// 	int		line_length;
-// 	int		endian;
-//   int posX;
-//   int posY;
-//   int dirY;
-//   int dirX;
-//   double moveSpeed;
-//   double rotSpeed;
-//   double planeX;
-//   double planeY;
-//   void *mlx1;
-//   void *mlx1_win;
-//   double Oldtime;
-//   double Time;
-// }				t_data;
+
  void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
@@ -95,7 +64,7 @@ int	create_trgb(int t, int r, int g, int b)
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 } 
- void	*g_img;
+void	*g_img;
 
 int get_map_tile(int mapX, int mapY)
 {
@@ -115,6 +84,22 @@ int draw_map(t_state *state)
   img->img = mlx_new_image(state->mlx, screenWidth,  screenHeight );
   img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length,
 								&img->endian);
+  for(int x = 0; x < texWidth; x++)
+  for(int y = 0; y < texHeight; y++)
+  {
+    int xorcolor = (x * 256 / texWidth) ^ (y * 256 / texHeight);
+    //int xcolor = x * 256 / texWidth;
+    int ycolor = y * 256 / texHeight;
+    int xycolor = y * 128 / texHeight + x * 128 / texWidth;
+    img->texture[0][texWidth * y + x] = 65536 * 254 * (x != y && x != texWidth - y); //flat red texture with black cross
+    img->texture[1][texWidth * y + x] = xycolor + 256 * xycolor + 65536 * xycolor; //sloped greyscale
+    img->texture[2][texWidth * y + x] = 256 * xycolor + 65536 * xycolor; //sloped yellow gradient
+    img->texture[3][texWidth * y + x] = xorcolor + 256 * xorcolor + 65536 * xorcolor; //xor greyscale
+    img->texture[4][texWidth * y + x] = 256 * xorcolor; //xor green
+    img->texture[5][texWidth * y + x] = 65536 * 192 * (x % 16 && y % 16); //red bricks
+    img->texture[6][texWidth * y + x] = 65536 * ycolor; //red gradient
+    img->texture[7][texWidth * y + x] = 128 + 256 * 128 + 65536 * 128; //flat grey texture
+  }
   int x = 0;
   while(x<screenWidth)
 	{
@@ -204,32 +189,54 @@ int draw_map(t_state *state)
       {
         drawEnd = screenHeight - 1;
       }
+      //texturing calculations
+      int texNum = worldMap[mapX][mapY] - 1; //1 subtracted from it so that texture 0 can be used!
+
+      //calculate value of wallX
+      double wallX; //where exactly the wall was hit
+      if (side == 0) wallX = img->posY + perpWallDist * rayDirY;
+      else           wallX = img->posX + perpWallDist * rayDirX;
+      wallX -= floor((wallX));
+
+      //x coordinate on the texture
+      int texX = (int)(wallX * (double)(texWidth));
+      if(side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
+      if(side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
       //choose wall color
-     int color;
-      // switch(worldMap[mapX][mapY])
-      switch(get_map_tile(mapX, mapY))
+      // How much to increase the texture coordinate per screen pixel
+      double step = 1.0 * texHeight / lineHeight;
+      // Starting texture coordinate
+      double texPos = (drawStart -screenHeight / 2 + lineHeight / 2) * step;
+      for(int y = drawStart; y<drawEnd; y++)
       {
-        case 1:  color = create_trgb(240,255,0,0);  break; //red
-        case 2:  color = 0x00008000;  break; //green
-        case 3:  color = 0x000000FF;  break; //blue
-        case 4:  color = 0x00FFFFFF;  break; //white
-        default: color = 0x00FFFF00;  break; //yellow
-      } 
-      if (side == 1) {color = color / 2;}       
-        while(drawStart<drawEnd)
-          {
-           
-            my_mlx_pixel_put(img,  x, drawStart, color );
-            drawStart++;
-          }      
+        // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
+        int texY = (int)texPos & (texHeight - 1);
+        texPos += step;
+        int color = img->texture[texNum][texHeight * texY + texX];
+        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+        if(side == 1) color = (color >> 1) & 8355711;
+        img->buffer[y][x] = color;
+      }
+    
 	    x++;
   }
+      int e = 0;
+        while(e<screenWidth)
+          {
+            int y = 0;
+            while(y<screenHeight)
+            {
+              my_mlx_pixel_put(img,  e, y,img->buffer[y][e] );
+              y++;
+            }
+            e++;
+          }      
  img->Oldtime = img->Time;
-    img->Time = get_time();
-    double frameTime = (img->Time - img->Oldtime)/1000; //frameTime is the time this frame has taken, in seconds
-    mlx_put_image_to_window(state->mlx, state->window, img->img, 0, 0);
-    img->moveSpeed = frameTime * 5.0; //the constant value is in squares/second
-    img->rotSpeed = frameTime * 3.0; //the constant value is in radians/second
+  img->Time = get_time();
+  double frameTime = (img->Time - img->Oldtime)/1000; //frameTime is the time this frame has taken, in seconds
+  mlx_put_image_to_window(state->mlx, state->window, img->img, 0, 0);
+  img->moveSpeed = frameTime * 5.0; //the constant value is in squares/second
+  img->rotSpeed = frameTime * 3.0; //the constant value is in radians/second
  
   return(0);
 }
@@ -306,10 +313,16 @@ int	carlos_main(t_state *state)
  
  img->posX = 22, img->posY = 12;  //x and y start position
   img->dirX = -1, img->dirY = 0; //initial direction vector
-  img->planeX = 0, img->planeY = 0.66; //the 2d raycaster version of camera plane
+  img->planeX = 0, img->planeY = 0.66; //the 2d raycaster version of camera planea
   img->Time = 0; //time of current frame
   img->Oldtime = 0; //time of previous frame
-
+  //img->buffer[screenWidth][screenHeight];
+  int i = 0;
+  while(i<7)
+  {
+    img->texture[i] = malloc(sizeof(int) * 64 *64);
+    i++;
+  }
  
 	 
   return (1);
