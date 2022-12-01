@@ -6,20 +6,16 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:59 by manu              #+#    #+#             */
-/*   Updated: 2022/11/29 10:35:23 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/11/30 10:29:38 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-
-// #include "image.h"
 #include "state.h"
 #include "error.h"
 #include "ft_printf.h"
 #include "mlx.h"
 #include "libft.h"
-// #include "collision.h"
-// #include "monster.h"
 
 int draw_map(t_state *state);
 

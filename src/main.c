@@ -23,32 +23,33 @@ long    get_time(void)
 int global;
 
  
+ 
 
 int worldMap[mapWidth][mapHeight]=
 {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1},
+  {1,0,1,0,0,0,0,1,0,1,0,1,0,1,0,1,1,0,0,0,1,1,1,1},
+  {1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
+  {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+  {1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1},
+  {1,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1},
+  {1,0,1,0,1,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,1},
+  {1,0,0,1,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,1,0,1,1},
+  {1,0,1,0,1,0,0,0,0,1,1,0,1,1,0,0,1,0,0,1,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
@@ -78,28 +79,14 @@ int draw_map(t_state *state)
 {
 
   t_data *img;
-
+  int buffer[screenHeight][screenWidth];
   img = &state->img;
   mlx_destroy_image(state->mlx, img->img);
   img->img = mlx_new_image(state->mlx, screenWidth,  screenHeight );
   img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length,
 								&img->endian);
-  for(int x = 0; x < texWidth; x++)
-  for(int y = 0; y < texHeight; y++)
-  {
-    int xorcolor = (x * 256 / texWidth) ^ (y * 256 / texHeight);
-    //int xcolor = x * 256 / texWidth;
-    int ycolor = y * 256 / texHeight;
-    int xycolor = y * 128 / texHeight + x * 128 / texWidth;
-    img->texture[0][texWidth * y + x] = 65536 * 254 * (x != y && x != texWidth - y); //flat red texture with black cross
-    img->texture[1][texWidth * y + x] = xycolor + 256 * xycolor + 65536 * xycolor; //sloped greyscale
-    img->texture[2][texWidth * y + x] = 256 * xycolor + 65536 * xycolor; //sloped yellow gradient
-    img->texture[3][texWidth * y + x] = xorcolor + 256 * xorcolor + 65536 * xorcolor; //xor greyscale
-    img->texture[4][texWidth * y + x] = 256 * xorcolor; //xor green
-    img->texture[5][texWidth * y + x] = 65536 * 192 * (x % 16 && y % 16); //red bricks
-    img->texture[6][texWidth * y + x] = 65536 * ycolor; //red gradient
-    img->texture[7][texWidth * y + x] = 128 + 256 * 128 + 65536 * 128; //flat grey texture
-  }
+ 
+  
   int x = 0;
   while(x<screenWidth)
 	{
@@ -189,7 +176,7 @@ int draw_map(t_state *state)
       {
         drawEnd = screenHeight - 1;
       }
-      //texturing calculations
+      
       int texNum = worldMap[mapX][mapY] - 1; //1 subtracted from it so that texture 0 can be used!
 
       //calculate value of wallX
@@ -214,8 +201,11 @@ int draw_map(t_state *state)
         texPos += step;
         int color = img->texture[texNum][texHeight * texY + texX];
         //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-        if(side == 1) color = (color >> 1) & 8355711;
-        img->buffer[y][x] = color;
+        if(side == 1) 
+          color = (color >> 1) & 8355711;
+     
+
+        buffer[y][x] = color;
       }
     
 	    x++;
@@ -226,11 +216,22 @@ int draw_map(t_state *state)
             int y = 0;
             while(y<screenHeight)
             {
-              my_mlx_pixel_put(img,  e, y,img->buffer[y][e] );
+              my_mlx_pixel_put(img,  e, y,buffer[y][e]);
               y++;
             }
             e++;
-          }      
+          }
+          e = 0;
+         while(e<screenWidth)
+          {
+            int y = 0;
+            while(y<screenHeight)
+            {
+             buffer[y][e] = 0;
+              y++;
+            }
+            e++;
+          } 
  img->Oldtime = img->Time;
   img->Time = get_time();
   double frameTime = (img->Time - img->Oldtime)/1000; //frameTime is the time this frame has taken, in seconds
@@ -310,21 +311,29 @@ int	carlos_main(t_state *state)
 	img->img = mlx_new_image(state->mlx, screenWidth,  screenHeight );
   img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length,
 								&img->endian);
- 
- img->posX = 22, img->posY = 12;  //x and y start position
+  img->posX = 22, img->posY = 12;  //x and y start position
   img->dirX = -1, img->dirY = 0; //initial direction vector
   img->planeX = 0, img->planeY = 0.66; //the 2d raycaster version of camera planea
   img->Time = 0; //time of current frame
   img->Oldtime = 0; //time of previous frame
   //img->buffer[screenWidth][screenHeight];
   int i = 0;
-  while(i<7)
+  while(i<8)
   {
-    img->texture[i] = malloc(sizeof(int) * 64 *64);
+    img->texture[i] = malloc(sizeof(int) * texHeight * texWidth);
     i++;
   }
- 
-	 
+  int w = 64;
+  int h = 64;
+	void *t1 = mlx_xpm_file_to_image(state->mlx, "../pics/eagle.xpm", &w, &h);
+	void *t2 = mlx_xpm_file_to_image(state->mlx, "../pics/bluestone.xpm", &w, &h);
+   	void *t3 = mlx_xpm_file_to_image(state->mlx, "../pics/colorstone.xpm", &w, &h);
+	void *t4 = mlx_xpm_file_to_image(state->mlx, "../pics/redbrick.xpm", &w, &h);
+  img->texture[0] =  (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
+  img->texture[1] = (int*)mlx_get_data_addr(t2, &img->bits_per_pixel, &img->line_length, &img->endian);
+  img->texture[2] = (int*)mlx_get_data_addr(t3, &img->bits_per_pixel, &img->line_length, &img->endian);
+  img->texture[3] = (int*)mlx_get_data_addr(t4, &img->bits_per_pixel, &img->line_length, &img->endian);
+   
   return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:05 by manu              #+#    #+#             */
-/*   Updated: 2022/11/29 11:23:20 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/01 08:55:43 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct	s_data {
 	double	planeY;
 	double	Oldtime;
 	double	Time;
-	int **buffer;
+ 
 	int *texture[8];
 }	t_data;
 
