@@ -63,7 +63,7 @@ int	create_trgb(int t, int r, int g, int b)
 	char	*dst;
 
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	* (unsigned int*)dst = color;
 } 
 void	*g_img;
 
@@ -177,7 +177,7 @@ int draw_map(t_state *state)
         drawEnd = screenHeight - 1;
       }
       
-      int texNum = worldMap[mapX][mapY] - 1; //1 subtracted from it so that texture 0 can be used!
+      //int texNum = worldMap[mapX][mapY] - 1; //1 subtracted from it so that texture 0 can be used!
 
       //calculate value of wallX
       double wallX; //where exactly the wall was hit
@@ -199,10 +199,20 @@ int draw_map(t_state *state)
         // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
         int texY = (int)texPos & (texHeight - 1);
         texPos += step;
-        int color = img->texture[texNum][texHeight * texY + texX];
-        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+        int color;
         if(side == 1) 
-          color = (color >> 1) & 8355711;
+        { 
+          if(rayDirY<=0) 
+            color = img->texture[0][texHeight * texY + texX];
+          else
+            color = img->texture[2][texHeight * texY + texX];
+        }
+        else
+        {  if(rayDirX<=0) 
+          color = img->texture[1][texHeight * texY + texX];
+           else
+            color = img->texture[3][texHeight * texY + texX];
+        }
      
 
         buffer[y][x] = color;
@@ -235,6 +245,7 @@ int draw_map(t_state *state)
  img->Oldtime = img->Time;
   img->Time = get_time();
   double frameTime = (img->Time - img->Oldtime)/1000; //frameTime is the time this frame has taken, in seconds
+ 
   mlx_put_image_to_window(state->mlx, state->window, img->img, 0, 0);
   img->moveSpeed = frameTime * 5.0; //the constant value is in squares/second
   img->rotSpeed = frameTime * 3.0; //the constant value is in radians/second
@@ -318,21 +329,27 @@ int	carlos_main(t_state *state)
   img->Oldtime = 0; //time of previous frame
   //img->buffer[screenWidth][screenHeight];
   int i = 0;
-  while(i<8)
+  while(i<3)
   {
     img->texture[i] = malloc(sizeof(int) * texHeight * texWidth);
     i++;
   }
   int w = 64;
   int h = 64;
-	void *t1 = mlx_xpm_file_to_image(state->mlx, "../pics/eagle.xpm", &w, &h);
-	void *t2 = mlx_xpm_file_to_image(state->mlx, "../pics/bluestone.xpm", &w, &h);
-   	void *t3 = mlx_xpm_file_to_image(state->mlx, "../pics/colorstone.xpm", &w, &h);
-	void *t4 = mlx_xpm_file_to_image(state->mlx, "../pics/redbrick.xpm", &w, &h);
+	void *t1 = mlx_xpm_file_to_image(state->mlx, "./pics/eagle.xpm", &w, &h);
+	void *t2 = mlx_xpm_file_to_image(state->mlx, "./pics/mossy.xpm", &w, &h);
+	void *t3 = mlx_xpm_file_to_image(state->mlx, "./pics/face.xpm", &w, &h);
+	void *t4 = mlx_xpm_file_to_image(state->mlx, "./pics/stone.xpm", &w, &h);
+  if (!t1 || !t2 || !t3 || !t4)
+    return (printf("Error, one or more files are not xpm\n"), 1);
+	// void *t2 = mlx_xpm_file_to_image(state->mlx, "../pics/bluestone.xpm", &w, &h);
+  // void *t3 = mlx_xpm_file_to_image(state->mlx, "../pics/colorstone.xpm", &w, &h);
+	// void *t4 = mlx_xpm_file_to_image(state->mlx, "../pics/wood.xpm", &w, &h);
+ 
   img->texture[0] =  (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
   img->texture[1] = (int*)mlx_get_data_addr(t2, &img->bits_per_pixel, &img->line_length, &img->endian);
   img->texture[2] = (int*)mlx_get_data_addr(t3, &img->bits_per_pixel, &img->line_length, &img->endian);
-  img->texture[3] = (int*)mlx_get_data_addr(t4, &img->bits_per_pixel, &img->line_length, &img->endian);
+  img->texture[3] = (int*)mlx_get_data_addr(t4, &img->bits_per_pixel, &img->line_length, &img->endian); 
    
   return (1);
 }
