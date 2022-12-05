@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:25:07 by manu              #+#    #+#             */
-/*   Updated: 2022/11/29 10:35:43 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/05 09:52:23 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ int	main(int argc, char *argv[])
 		ft_printf("Error\nIncorrect arguments.Expected './cub3D map.cub'\n");
 		return (0);
 	}
-/* 	if (!check_extension(argv[1], "cub"))
+/*  	if (!check_extension(argv[1], "cub"))
 	{
 		ft_printf("Error\nIncorrect map file extension\n");
 		return (0);
-	} */
+	}  */
 	if (!init_state(&state, argv[1]))
 		exit_with_error(&state);
 	carlos_main(&state);

@@ -6,23 +6,17 @@
 #include "mlx.h"
 #include <sys/time.h> 
 #include "state.h"
-
+#include "utils.h"
+#include "moves.h"
 
 #define mapWidth 24
 #define mapHeight 24
 #define texWidth 64
 #define texHeight 64
-long    get_time(void)
-{
-    struct timeval  now;
-    long            milliseconds;
-    gettimeofday(&now, NULL);
-    milliseconds = (now.tv_sec * 1000) + (now.tv_usec / 1000);
-    return (milliseconds);
-}
+
 int global;
 
- 
+int load_textures(t_state *state);
  
 
 int worldMap[mapWidth][mapHeight]=
@@ -53,27 +47,7 @@ int worldMap[mapWidth][mapHeight]=
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-int	create_trgb(int t, int r, int g, int b)
-{
-	return (t << 24 | r << 16 | g << 8 | b);
-}
-
- void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	* (unsigned int*)dst = color;
-} 
-void	*g_img;
-
-int get_map_tile(int mapX, int mapY)
-{
-
-  if (mapX >= mapWidth)
-    printf("get_map_tile x fuera de rango (%d)", mapX);
-  return worldMap[mapX][mapY];
-}
+ 
 
 int draw_map(t_state *state)
 {
@@ -85,8 +59,6 @@ int draw_map(t_state *state)
   img->img = mlx_new_image(state->mlx, screenWidth,  screenHeight );
   img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length,
 								&img->endian);
- 
-  
   int x = 0;
   while(x<screenWidth)
 	{
@@ -242,7 +214,7 @@ int draw_map(t_state *state)
             }
             e++;
           } 
- img->Oldtime = img->Time;
+  img->Oldtime = img->Time;
   img->Time = get_time();
   double frameTime = (img->Time - img->Oldtime)/1000; //frameTime is the time this frame has taken, in seconds
  
@@ -258,44 +230,35 @@ int draw_map(t_state *state)
   t_data *img;
 
   img = &state->img;
-  
-  printf("Key code pressed: (%d), (posX = %f), (posY = %f), (dirX = %f), (dirY = %f), (planeX = %f), (planeY = %f)\n", keycode, img->posX, img->posY, img->dirX, img->dirY, img->planeX, img->planeY);
-
-if (keycode == 13)
+    if (keycode == 13)
     {
-      if(worldMap[(int)(img->posX + (img->dirX * img->moveSpeed))][(int)img->posY] == 0) {img->posX += img->dirX * img->moveSpeed;}
-      if(worldMap[(int)img->posX][(int)(img->posY + img->dirY * img->moveSpeed)] == 0) {img->posY += img->dirY * img->moveSpeed;}
+      //move_up(img, worldMap);
+      if(worldMap[(int)(img->posX + (img->dirX * img->moveSpeed))][(int)img->posY] == 0) 
+        img->posX += img->dirX * img->moveSpeed;
+      if(worldMap[(int)img->posX][(int)(img->posY + img->dirY * img->moveSpeed)] == 0) 
+        img->posY += img->dirY * img->moveSpeed;
     }
-    //move backwards if no wall behind you
     if (keycode == 1)
-    {
-      
-      if(worldMap[(int)(img->posX - img->dirX * img->moveSpeed)][(int)img->posY] == 0)
-      { 
-       
+    {   
+      //move_down(img, worldMap); 
+      if(worldMap[(int)(img->posX - img->dirX * img->moveSpeed)][(int)img->posY] == 0)     
         img->posX -= img->dirX * img->moveSpeed;
-      }
       if(worldMap[(int)img->posX][(int)(img->posY - img->dirY * img->moveSpeed)] == 0)
-      {
-      
-       img->posY -= img->dirY * img->moveSpeed;
-      }
+        img->posY -= img->dirY * img->moveSpeed;
     }
-    //rotate to the right
     if (keycode == 2)
     {
-      //both camera direction and camera plane must be rotated
-      double oldDirX = img->dirX;
+      rotate_right(img);
+      /* double oldDirX = img->dirX;
       img->dirX = img->dirX * cos(-img->rotSpeed) - img->dirY * sin(-img->rotSpeed);
       img->dirY = oldDirX * sin(-img->rotSpeed) + img->dirY * cos(-img->rotSpeed);
       double oldPlaneX = img->planeX;
       img->planeX = img->planeX * cos(-img->rotSpeed) - img->planeY * sin(-img->rotSpeed);
-      img->planeY = oldPlaneX * sin(-img->rotSpeed) + img->planeY * cos(-img->rotSpeed);
+      img->planeY = oldPlaneX * sin(-img->rotSpeed) + img->planeY * cos(-img->rotSpeed); */
     }
-    //rotate to the left
     if (keycode == 0)
     {
-      //both camera direction and camera plane must be rotated
+      rotate_left(img);
       double oldDirX = img->dirX;
       img->dirX = img->dirX * cos(img->rotSpeed) - img->dirY * sin(img->rotSpeed);
       img->dirY = oldDirX * sin(img->rotSpeed) + img->dirY * cos(img->rotSpeed);
@@ -303,8 +266,6 @@ if (keycode == 13)
       img->planeX = img->planeX * cos(img->rotSpeed) - img->planeY * sin(img->rotSpeed);
       img->planeY = oldPlaneX * sin(img->rotSpeed) + img->planeY * cos(img->rotSpeed);
     }
-    
-    // draw_map(state);
 	return (0);
 }
 
@@ -314,11 +275,9 @@ if (keycode == 13)
 
 int	carlos_main(t_state *state)
 {
- 
   t_data *img;
 
-  img = &state->img;
-   
+  img = &state->img;  
 	img->img = mlx_new_image(state->mlx, screenWidth,  screenHeight );
   img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length,
 								&img->endian);
@@ -327,30 +286,31 @@ int	carlos_main(t_state *state)
   img->planeX = 0, img->planeY = 0.66; //the 2d raycaster version of camera planea
   img->Time = 0; //time of current frame
   img->Oldtime = 0; //time of previous frame
-  //img->buffer[screenWidth][screenHeight];
-  int i = 0;
-  while(i<3)
-  {
+  load_textures(state);
+  return (1);
+}
+
+int load_textures(t_state *state)
+{
+  t_data *img;
+  int i;
+
+  img = &state->img;
+  img->w = 64;
+  img->h = 64;
+  i = -1;
+  while(++i<3)
     img->texture[i] = malloc(sizeof(int) * texHeight * texWidth);
-    i++;
-  }
-  int w = 64;
-  int h = 64;
-	void *t1 = mlx_xpm_file_to_image(state->mlx, "./pics/eagle.xpm", &w, &h);
-	void *t2 = mlx_xpm_file_to_image(state->mlx, "./pics/mossy.xpm", &w, &h);
-	void *t3 = mlx_xpm_file_to_image(state->mlx, "./pics/face.xpm", &w, &h);
-	void *t4 = mlx_xpm_file_to_image(state->mlx, "./pics/stone.xpm", &w, &h);
-  if (!t1 || !t2 || !t3 || !t4)
-    return (printf("Error, one or more files are not xpm\n"), 1);
-	// void *t2 = mlx_xpm_file_to_image(state->mlx, "../pics/bluestone.xpm", &w, &h);
-  // void *t3 = mlx_xpm_file_to_image(state->mlx, "../pics/colorstone.xpm", &w, &h);
-	// void *t4 = mlx_xpm_file_to_image(state->mlx, "../pics/wood.xpm", &w, &h);
- 
-  img->texture[0] =  (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
-  img->texture[1] = (int*)mlx_get_data_addr(t2, &img->bits_per_pixel, &img->line_length, &img->endian);
-  img->texture[2] = (int*)mlx_get_data_addr(t3, &img->bits_per_pixel, &img->line_length, &img->endian);
-  img->texture[3] = (int*)mlx_get_data_addr(t4, &img->bits_per_pixel, &img->line_length, &img->endian); 
-   
+	void *t1 = mlx_xpm_file_to_image(state->mlx, "./pics/eagle.xpm", &img->w, &img->h);
+    img->texture[0] =  (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
+	t1 = mlx_xpm_file_to_image(state->mlx, "./pics/mossy.xpm", &img->w, &img->h);
+    img->texture[1] = (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
+	t1 = mlx_xpm_file_to_image(state->mlx, "./pics/face.xpm", &img->w, &img->h);
+    img->texture[2] = (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
+	t1 = mlx_xpm_file_to_image(state->mlx, "./pics/stone.xpm", &img->w, &img->h);
+    img->texture[3] = (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian); 
+  if (!t1)
+    return (printf("Error, one or more files are not xpm\n"), 1); //<---HAY QUE MIRAR ESTA CONDICION
   return (1);
 }
 

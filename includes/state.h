@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:05 by manu              #+#    #+#             */
-/*   Updated: 2022/12/01 08:55:43 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/05 11:29:03 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,15 @@ typedef struct	s_data {
 	double	planeY;
 	double	Oldtime;
 	double	Time;
- 
+	int w;
+	int h;
 	int *texture[8];
 }	t_data;
 
 typedef struct s_state
 {
-	t_map		map;
 	void		*mlx;
 	void		*window;
-	t_animation	hero;
-	t_animation	monster;
-	int			monster_last_axis_move;
-	t_image		floor;
-	t_image		exit;
-	t_image		wall;
-	t_image		collectible;
 	int			n_hero_moves;
 	int			n_collectibles;
 	int			time;

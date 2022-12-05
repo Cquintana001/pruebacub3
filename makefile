@@ -8,7 +8,9 @@ SOURCES				= 	$(SRC_DIR)/main.c \
 						$(SRC_DIR)/error.c \
 						$(SRC_DIR)/events.c \
 						$(SRC_DIR)/frame.c \
-						$(SRC_DIR)/state.c
+						$(SRC_DIR)/state.c\
+						$(SRC_DIR)/utils.c\
+						$(SRC_DIR)/moves.c
 MAIN_SOURCES		= 	$(SRC_DIR)/main_mac.c $(SOURCES)
 TEST_SOURCES		= 	$(SRC_DIR)/tests.c $(SOURCES)
 OBJS				= 	$(MAIN_SOURCES:.c=.o)
