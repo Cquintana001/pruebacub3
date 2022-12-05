@@ -59,8 +59,8 @@ int draw_map(t_state *state)
   img->img = mlx_new_image(state->mlx, screenWidth,  screenHeight );
   img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length,
 								&img->endian);
-  int x = 0;
-  while(x<screenWidth)
+  state->x = 0;
+  while(state->x<screenWidth)
 	{
       //calculate ray position and direction
       double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
@@ -85,7 +85,8 @@ int draw_map(t_state *state)
       int stepX;
       int stepY;
       int hit = 0; //was there a wall hit?
-      int side; //was a NS or a EW wall hit?
+      int side;
+       //was a NS or a EW wall hit?
       if (rayDirX < 0)
       {
         stepX = -1;

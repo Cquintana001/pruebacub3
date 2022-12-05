@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:05 by manu              #+#    #+#             */
-/*   Updated: 2022/12/05 11:29:03 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/05 12:28:57 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,25 @@ typedef struct s_state
 {
 	void		*mlx;
 	void		*window;
-	int			n_hero_moves;
-	int			n_collectibles;
+	int			x;
+	int			cameraX;
+	double		rayDirX;
+	double		rayDirY;
+	int			mapX;
+	int			mapY;
+	double		sideDistX;
+	double		sideDistY;
+	double		deltaDistX;
+	double		deltaDistY;
+	double		perpWallDist;
+	int			stepX;
+	int			stepY;
+	int			hit;
+	int			side;
 	int			time;
+	int			lineHeight;
+	int			drawStart;
+	int			drawEnd;
 	t_data		img;
 }	t_state;
 
