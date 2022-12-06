@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:05 by manu              #+#    #+#             */
-/*   Updated: 2022/12/05 12:28:57 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/06 14:38:03 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 
 # define screenWidth 1920
 # define screenHeight 1080
+#define mapWidth 24
+#define mapHeight 24
 
 typedef struct s_image
 {
@@ -71,7 +73,7 @@ typedef struct	s_data {
 	double	Time;
 	int w;
 	int h;
-	int *texture[8];
+	int *tex[8];
 }	t_data;
 
 typedef struct s_state
@@ -79,7 +81,8 @@ typedef struct s_state
 	void		*mlx;
 	void		*window;
 	int			x;
-	int			cameraX;
+	int			y;
+	double			cameraX;
 	double		rayDirX;
 	double		rayDirY;
 	int			mapX;
@@ -97,6 +100,13 @@ typedef struct s_state
 	int			lineHeight;
 	int			drawStart;
 	int			drawEnd;
+	double		wallX;
+	int			texX;
+	int			texY;
+	double		step;
+	double		texPos;
+	int			color;
+	
 	t_data		img;
 }	t_state;
 

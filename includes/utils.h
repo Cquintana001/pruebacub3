@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 09:16:38 by caquinta          #+#    #+#             */
-/*   Updated: 2022/12/05 09:18:02 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/06 14:56:29 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,12 @@
 long    get_time(void);
 int	create_trgb(int t, int r, int g, int b);
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+int assign_values(t_state *state);
+int assign_values2(t_state *state);
+int perform_DDA(t_state *state, int worldMap[mapWidth][mapHeight]);
+int calculate_dist(t_state *state);
+int calculate_wall(t_state *state);
+int load_buffer(t_state *state, int buffer[screenHeight][screenWidth]);
+int draw(t_state *state, int buffer[screenHeight][screenWidth]);
 
 #endif

@@ -61,137 +61,142 @@ int draw_map(t_state *state)
 								&img->endian);
   state->x = 0;
   while(state->x<screenWidth)
-	{
-      //calculate ray position and direction
-      double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
-      double rayDirX = img->dirX + img->planeX * cameraX;
-      double rayDirY = img->dirY + img->planeY * cameraX;
+	{     
+      /* state->cameraX = 2 * state->x / (double)screenWidth - 1;  
+      state->rayDirX = img->dirX + img->planeX * state->cameraX;
+      state->rayDirY = img->dirY + img->planeY * state->cameraX;
 
-      //which box of the map we're in
-      int mapX = (int)img->posX;
-      int mapY = (int)img->posY;
-
-      //length of ray from current position to next x or y-side
-      double sideDistX;
-      double sideDistY;
-
-       //length of ray from one x or y-side to next x or y-side
-      double deltaDistX = (rayDirX == 0) ? 1e30 : fabs(1 / rayDirX);
-      double deltaDistY = (rayDirY == 0) ? 1e30 : fabs(1 / rayDirY);
-      double perpWallDist;
-
-   
-      //what direction to step in x or y-direction (either +1 or -1)
-      int stepX;
-      int stepY;
-      int hit = 0; //was there a wall hit?
-      int side;
+ 
+      state->mapX = (int)img->posX;
+      state->mapY = (int)img->posY;
+ 
+    if(state->rayDirX == 0)
+      {  state->deltaDistX = 1e30;
+      }
+    else
+      {
+        state->deltaDistX = fabs(1 / state->rayDirX);
+      }
+    if(state->rayDirY == 0)
+    {
+        state->deltaDistY = 1e30;
+    }
+    else
+    {
+        state->deltaDistY = fabs(1 / state->rayDirY);
+    } 
+ state->deltaDistX = (state->rayDirX == 0) ? 1e30 : fabs(1 / state->rayDirX);
+    state->deltaDistY = (state->rayDirY == 0) ? 1e30 : fabs(1 / state->rayDirY); */
+    state->hit = 0; //was there a wall hit?
+ 
+  
+      assign_values(state);
        //was a NS or a EW wall hit?
-      if (rayDirX < 0)
+      /* if (state->rayDirX < 0)
       {
-        stepX = -1;
-        sideDistX = (img->posX - mapX) * deltaDistX;
+        state->stepX = -1;
+        state->sideDistX = (img->posX - state->mapX) * state->deltaDistX;
       }
       else
       {
-        stepX = 1;
-        sideDistX = (mapX + 1.0 - img->posX) * deltaDistX;
+        state->stepX = 1;
+        state->sideDistX = (state->mapX + 1.0 - img->posX) * state->deltaDistX;
       }
-      if (rayDirY < 0)
+      if (state->rayDirY < 0)
       {
-        stepY = -1;
-        sideDistY = (img->posY - mapY) * deltaDistY;
+        state->stepY = -1;
+        state->sideDistY = (img->posY - state->mapY) * state->deltaDistY;
       }
       else
       {
-        stepY = 1;
-        sideDistY = (mapY + 1.0 - img->posY) * deltaDistY;
-      }
+        state->stepY = 1;
+        state->sideDistY = (state->mapY + 1.0 - img->posY) * state->deltaDistY;
+      } */
+      assign_values2(state);
       //perform DDA
-      while (hit == 0)
+     /*  while (state->hit == 0)
       {
         //jump to next map square, either in x-direction, or in y-direction
-        if (sideDistX < sideDistY)
+        if (state->sideDistX < state->sideDistY)
         {
-          sideDistX += deltaDistX;
-          mapX += stepX;
-          side = 0;
+          state->sideDistX += state->deltaDistX;
+          state->mapX += state->stepX;
+          state->side = 0;
         }
         else
         {
-          sideDistY += deltaDistY;
-          mapY += stepY;
-          side = 1;
+          state->sideDistY += state->deltaDistY;
+          state->mapY += state->stepY;
+          state->side = 1;
         }
         //Check if ray has hit a wall
-        if (worldMap[mapX][mapY] > 0) 
-          hit = 1;
-      } 
+        if (worldMap[state->mapX][state->mapY] > 0) 
+          state->hit = 1;
+      }  */
+      perform_DDA(state, worldMap);
       //Calculate distance projected on camera direction (Euclidean distance would give fisheye effect!)
-      if(side == 0)
+      /* if(state->side == 0)
       { 
-        perpWallDist = (sideDistX - deltaDistX);
+        state->perpWallDist = (state->sideDistX - state->deltaDistX);
       }
       else
       {          
-        perpWallDist = (sideDistY - deltaDistY);
+        state->perpWallDist = (state->sideDistY - state->deltaDistY);
       }
       //Calculate height of line to draw on screen
-      int lineHeight = (int)(screenHeight/ perpWallDist);
+      state->lineHeight = (int)(screenHeight/ state->perpWallDist);
       //calculate lowest and highest pixel to fill in current stripe
-      int drawStart = -lineHeight / 2 + screenHeight / 2;
-      if(drawStart < 0)
+      state->drawStart = -state->lineHeight / 2 + screenHeight / 2;
+      if(state->drawStart < 0)
       {
-        drawStart = 0;
+        state->drawStart = 0;
       }
-      int drawEnd = lineHeight / 2 + screenHeight / 2;
-      if(drawEnd >= screenHeight)
+      state->drawEnd = state->lineHeight / 2 + screenHeight / 2;
+      if(state->drawEnd >= screenHeight)
       {
-        drawEnd = screenHeight - 1;
-      }
-      
-      //int texNum = worldMap[mapX][mapY] - 1; //1 subtracted from it so that texture 0 can be used!
-
-      //calculate value of wallX
-      double wallX; //where exactly the wall was hit
-      if (side == 0) wallX = img->posY + perpWallDist * rayDirY;
-      else           wallX = img->posX + perpWallDist * rayDirX;
-      wallX -= floor((wallX));
+        state->drawEnd = screenHeight - 1;
+      } */
+      calculate_dist(state);
+ 
+     /*  if (state->side == 0) state->wallX = img->posY + state->perpWallDist * state->rayDirY;
+      else           state->wallX = img->posX + state->perpWallDist * state->rayDirX;
+      state->wallX -= floor((state->wallX));
 
       //x coordinate on the texture
-      int texX = (int)(wallX * (double)(texWidth));
-      if(side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
-      if(side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
+      state->texX = (int)(state->wallX * (double)(texWidth));
+      if(state->side == 0 && state->rayDirX > 0) state->texX = texWidth - state->texX - 1;
+      if(state->side == 1 && state->rayDirY < 0) state->texX = texWidth - state->texX - 1;
       //choose wall color
       // How much to increase the texture coordinate per screen pixel
-      double step = 1.0 * texHeight / lineHeight;
+      state->step = 1.0 * texHeight / state->lineHeight;
       // Starting texture coordinate
-      double texPos = (drawStart -screenHeight / 2 + lineHeight / 2) * step;
-      for(int y = drawStart; y<drawEnd; y++)
+     state->texPos = (state->drawStart -screenHeight / 2 + state->lineHeight / 2) * state->step; */
+     calculate_wall(state);
+      /* for(int y = state->drawStart; y<state->drawEnd; y++)
       {
         // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
-        int texY = (int)texPos & (texHeight - 1);
-        texPos += step;
+      state->texY = (int)state->texPos & (texHeight - 1);
+        state->texPos += state->step;
         int color;
-        if(side == 1) 
+        if(state->side == 1) 
         { 
-          if(rayDirY<=0) 
-            color = img->texture[0][texHeight * texY + texX];
+          if(state->rayDirY<=0) 
+            color = img->texture[0][texHeight * state->texY + state->texX];
           else
-            color = img->texture[2][texHeight * texY + texX];
+            color = img->texture[2][texHeight * state->texY + state->texX];
         }
         else
-        {  if(rayDirX<=0) 
-          color = img->texture[1][texHeight * texY + texX];
+        {  if(state->rayDirX<=0) 
+          color = img->texture[1][texHeight * state->texY + state->texX];
            else
-            color = img->texture[3][texHeight * texY + texX];
+            color = img->texture[3][texHeight * state->texY + state->texX];
         }
      
 
-        buffer[y][x] = color;
-      }
-    
-	    x++;
+        buffer[y][state->x] = color;
+      } */
+      load_buffer(state, buffer);
+	    state->x++;
   }
       int e = 0;
         while(e<screenWidth)
@@ -301,15 +306,15 @@ int load_textures(t_state *state)
   img->h = 64;
   i = -1;
   while(++i<3)
-    img->texture[i] = malloc(sizeof(int) * texHeight * texWidth);
+    img->tex[i] = malloc(sizeof(int) * texHeight * texWidth);
 	void *t1 = mlx_xpm_file_to_image(state->mlx, "./pics/eagle.xpm", &img->w, &img->h);
-    img->texture[0] =  (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
+    img->tex[0] =  (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
 	t1 = mlx_xpm_file_to_image(state->mlx, "./pics/mossy.xpm", &img->w, &img->h);
-    img->texture[1] = (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
+    img->tex[1] = (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
 	t1 = mlx_xpm_file_to_image(state->mlx, "./pics/face.xpm", &img->w, &img->h);
-    img->texture[2] = (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
+    img->tex[2] = (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian);
 	t1 = mlx_xpm_file_to_image(state->mlx, "./pics/stone.xpm", &img->w, &img->h);
-    img->texture[3] = (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian); 
+    img->tex[3] = (int*)mlx_get_data_addr(t1, &img->bits_per_pixel, &img->line_length, &img->endian); 
   if (!t1)
     return (printf("Error, one or more files are not xpm\n"), 1); //<---HAY QUE MIRAR ESTA CONDICION
   return (1);
