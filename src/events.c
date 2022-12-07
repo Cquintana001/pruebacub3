@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:50 by manu              #+#    #+#             */
-/*   Updated: 2022/12/07 12:38:38 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/07 12:59:21 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ int press_key(int keycode, t_state *state)
 	if (keycode == EVENT_KEY_ESC)
 		exit_without_error(state);
 	 
-	 key_hook(keycode, state);
+	key_hook(keycode, state);
 	return(0);
 }
-/* int key_release(int keycode, t_state *state)
+ /* int key_release( t_state *state)
 {
-	 
+	state->key = -1;
 	return(0);
-} */
+}  */
 int	on_key_pressed(int key_code, t_state *state)
 {
 	 

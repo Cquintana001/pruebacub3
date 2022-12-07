@@ -46,7 +46,7 @@ int worldMap[mapWidth][mapHeight]=
   {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
- 
+ int	key_hook(int keycode, t_state *state);
  
 
 int draw_map(t_state *state)
@@ -60,7 +60,9 @@ int draw_map(t_state *state)
   img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length,
 								&img->endian);
   state->x = 0;
- 
+   
+    
+   
   while(state->x<screenWidth)
 	{  
          
@@ -124,7 +126,7 @@ int draw_map(t_state *state)
       img->planeX = img->planeX * cos(img->rotSpeed) - img->planeY * sin(img->rotSpeed);
       img->planeY = oldPlaneX * sin(img->rotSpeed) + img->planeY * cos(img->rotSpeed);
     }
-   
+   printf("tecla pulsada es %d\n", keycode);
 	return (0);
 }
 
@@ -145,6 +147,7 @@ int	carlos_main(t_state *state)
   img->planeX = 0, img->planeY = 0.66; //the 2d raycaster version of camera planea
   img->Time = 0; //time of current frame
   img->Oldtime = 0; //time of previous frame
+  
   load_textures(state);
   return (1);
 }
