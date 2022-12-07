@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 08:33:21 by caquinta          #+#    #+#             */
-/*   Updated: 2022/12/06 14:59:16 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:13:46 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,18 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
-
+int	load_color_f_c(t_state *state)
+{
+	state->c = create_trgb(0, 225, 30, 0);
+	state->f = create_trgb(0, 220, 100, 0);
+	return (0);
+}
 int	assign_values(t_state *state)
 {
 	t_data	*img;
 
 	img = &state->img;
+	state->hit = 0;
 	state->cameraX = 2 * state->x / (double)screenWidth - 1;
 	state->rayDirX = img->dirX + img->planeX * state->cameraX;
 	state->rayDirY = img->dirY + img->planeY * state->cameraX;
@@ -146,31 +152,71 @@ int	calculate_wall(t_state *state)
 	return (0);
 }
 
+static int	draw_textures(t_state *state, int buffer[screenHeight][screenWidth])
+{
+	t_data	*img;
+
+	img = &state->img;
+	state->texY = (int)state->texPos & (img->h - 1);
+	state->texPos += state->step;
+	if (state->side == 1)
+	{
+		if (state->rayDirY <= 0)
+			state->color = img->tex[0][img->h * state->texY + state->texX];
+		else
+			state->color = img->tex[2][img->h * state->texY + state->texX];
+	}
+	else
+	{
+		if (state->rayDirX <= 0)
+			state->color = img->tex[1][img->h * state->texY + state->texX];
+		else
+			state->color = img->tex[3][img->h * state->texY + state->texX];
+	}
+	buffer[state->y][state->x] = state->color;
+	return (0);
+}
 int	load_buffer(t_state *state, int buffer[screenHeight][screenWidth])
 {
 	t_data	*img;
 
-	state->y = state->drawStart - 1;
+	state->y = -1;
 	img = &state->img;
-	while (++state->y < state->drawEnd)
+	while (++state->y < screenHeight)
 	{
-		state->texY = (int)state->texPos & (img->h - 1);
-		state->texPos += state->step;
-		if (state->side == 1)
-		{
-			if (state->rayDirY <= 0)
-				state->color = img->tex[0][img->h * state->texY + state->texX];
-			else
-				state->color = img->tex[2][img->h * state->texY + state->texX];
-		}
+		if (state->y <= state->drawStart)
+			buffer[state->y][state->x] = state->f;
+		else if (state->y >= state->drawEnd)
+			buffer[state->y][state->x] = state->c;
 		else
+			draw_textures(state, buffer);
+	}
+	return (0);
+}
+
+int	load_pixels(t_state *state, int buffer[screenHeight][screenWidth])
+{
+	int e = 0;
+	while (e < screenWidth)
+	{
+		int y = 0;
+		while (y < screenHeight)
 		{
-			if (state->rayDirX <= 0)
-				state->color = img->tex[1][img->h * state->texY + state->texX];
-			else
-				state->color = img->tex[3][img->h * state->texY + state->texX];
+			my_mlx_pixel_put(&state->img, e, y, buffer[y][e]);
+			y++;
 		}
-		buffer[state->y][state->x] = state->color;
+		e++;
+	}
+	e = 0;
+	while (e < screenWidth)
+	{
+		int y = 0;
+		while (y < screenHeight)
+		{
+			buffer[y][e] = 0;
+			y++;
+		}
+		e++;
 	}
 	return (0);
 }

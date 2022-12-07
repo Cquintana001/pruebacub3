@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:25:07 by manu              #+#    #+#             */
-/*   Updated: 2022/12/05 09:52:23 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/07 12:09:04 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ int	carlos_main(t_state *state);
 static void	init_hooks(t_state *state)
 {
 	mlx_hook (state->window, EVENT_ON_DESTROY, 0, exit_without_error, state);
-	mlx_key_hook(state->window, on_key_pressed, state);
+ 
+	mlx_hook (state->window, ON_KEYDOWN, 0, press_key, state);
+	//mlx_key_hook(state->window, on_key_pressed, state);
 	mlx_loop_hook(state->mlx, on_render_frame, state);
 }
 

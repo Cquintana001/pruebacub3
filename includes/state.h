@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:05 by manu              #+#    #+#             */
-/*   Updated: 2022/12/06 14:38:03 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/07 12:37:52 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,9 @@ typedef struct s_state
 	double		step;
 	double		texPos;
 	int			color;
-	
+	int			f;
+	int			c;
+	 
 	t_data		img;
 }	t_state;
 

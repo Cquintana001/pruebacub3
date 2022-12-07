@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 09:16:38 by caquinta          #+#    #+#             */
-/*   Updated: 2022/12/06 14:56:29 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/07 09:38:11 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,7 @@ int calculate_dist(t_state *state);
 int calculate_wall(t_state *state);
 int load_buffer(t_state *state, int buffer[screenHeight][screenWidth]);
 int draw(t_state *state, int buffer[screenHeight][screenWidth]);
-
+int load_pixels(t_state *state, int buffer[screenHeight][screenWidth]);
+int load_color_f_c(t_state *state);
+ 
 #endif
