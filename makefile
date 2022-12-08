@@ -20,7 +20,7 @@ LIB_FT_PRINTF		=	ft_printf
 LIB_FT				=	libft
 LIB_GNL				=	gnl
 
-CFLAGS 				= 	-Wall -Wextra -Werror -fsanitize=address -static-libsan -g3
+CFLAGS 				= 	-Wall -Wextra -Werror     
 
 OS := $(shell uname)
 ifeq ($(OS), Darwin)

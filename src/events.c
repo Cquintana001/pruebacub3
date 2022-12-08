@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:50 by manu              #+#    #+#             */
-/*   Updated: 2022/12/08 12:15:58 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/08 13:13:31 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	key_hook(int keycode, t_state *state);
 
 int press_key(int keycode, t_state *state)
 {
+	printf("tecla %d\n", keycode);
 	if (keycode == EVENT_KEY_ESC)
 		exit_without_error(state);
 	if(keycode==13)
@@ -30,6 +31,10 @@ int press_key(int keycode, t_state *state)
 		state->down = 1; 
 	if(keycode==2)
 		state->right = 1;
+	if(keycode==123)
+		state->l = 1;
+	if(keycode==124)
+		state->r = 1;
 	return(0);
 }
  int key_release(int keycode, t_state *state)
@@ -41,7 +46,12 @@ int press_key(int keycode, t_state *state)
 	if(keycode==1)
 		state->down = 0; 
 	if(keycode==2)
-		state->right = 0;  
+		state->right = 0;
+	if(keycode==123)
+		state->l = 0;
+	if(keycode==124)
+		state->r = 0;
+		  
 	return(0);
 }  
 int	on_key_pressed(int key_code, t_state *state)

@@ -84,9 +84,8 @@ int draw_map(t_state *state)
  int	key_hook(t_state *state)
 {
   t_data *img;
-
-  img = &state->img;
-   
+  
+  img = &state->img; 
     if (state->up==1)
     {
       if(worldMap[(int)(img->posX + (img->dirX * img->moveSpeed))][(int)img->posY] == 0) 
@@ -102,9 +101,23 @@ int draw_map(t_state *state)
         img->posY -= img->dirY * img->moveSpeed;
     }
     if (state->right == 1)
-      rotate_right(img);
+     { if(worldMap[(int)(img->posX + img->dirY * img->moveSpeed)][(int)img->posY] == 0)     
+        img->posX += img->dirY * img->moveSpeed;
+      if(worldMap[(int)img->posX][(int)(img->posY - img->dirX * img->moveSpeed)] == 0)
+        img->posY += -img->dirX * img->moveSpeed;
+     }
     if (state->left==1)
+    {
+      if(worldMap[(int)(img->posX - img->dirY * img->moveSpeed)][(int)img->posY] == 0)     
+        img->posX -= img->dirY * img->moveSpeed;
+      if(worldMap[(int)img->posX][(int)(img->posY + img->dirX * img->moveSpeed)] == 0)
+        img->posY -= -img->dirX * img->moveSpeed;
+    }
+    if(state->l==1)
       rotate_left(img);
+
+    if(state->r==1)
+      rotate_right(img);
 	return (0);
 }
 
@@ -129,7 +142,8 @@ int	carlos_main(t_state *state)
   state->down = 0;
   state->right = 0;
   state->left = 0;
-  
+  state->l=0;
+  state->r = 0;
   load_textures(state);
   return (1);
 }

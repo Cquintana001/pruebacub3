@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:24:05 by manu              #+#    #+#             */
-/*   Updated: 2022/12/08 10:42:24 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/08 12:42:51 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ typedef struct s_state
 	int			down;
 	int			left;
 	int			right;
+	int			l;
+	int			r;
 	t_data		img;
 }	t_state;
 
