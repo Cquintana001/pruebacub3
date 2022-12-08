@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 08:33:21 by caquinta          #+#    #+#             */
-/*   Updated: 2022/12/07 11:13:46 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/08 12:28:44 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 }
 int	load_color_f_c(t_state *state)
 {
-	state->c = create_trgb(0, 225, 30, 0);
-	state->f = create_trgb(0, 220, 100, 0);
+	state->c = create_trgb(0, 234, 221, 202);
+	state->f = create_trgb(0, 0, 0, 250);
 	return (0);
 }
 int	assign_values(t_state *state)

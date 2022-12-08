@@ -46,12 +46,11 @@ int worldMap[mapWidth][mapHeight]=
   {1,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
- int	key_hook(int keycode, t_state *state);
+ int	key_hook( t_state *state);
  
 
 int draw_map(t_state *state)
 {
-
   t_data *img;
   int buffer[screenHeight][screenWidth];
   img = &state->img;
@@ -60,12 +59,9 @@ int draw_map(t_state *state)
   img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length,
 								&img->endian);
   state->x = 0;
-   
-    
-   
+  key_hook(state);
   while(state->x<screenWidth)
-	{  
-         
+	{ 
     assign_values(state);      
     assign_values2(state);      
     perform_DDA(state, worldMap);     
@@ -80,53 +76,35 @@ int draw_map(t_state *state)
   img->Time = get_time();
   double frameTime = (img->Time - img->Oldtime)/1000; //frameTime is the time this frame has taken, in seconds
   mlx_put_image_to_window(state->mlx, state->window, img->img, 0, 0);
-  img->moveSpeed = frameTime * 4.0; //the constant value is in squares/second
-  img->rotSpeed = frameTime * 3.0; //the constant value is in radians/second
- 
+  img->moveSpeed = frameTime * 2.0; //the constant value is in squares/second
+  img->rotSpeed = frameTime * 2.0; //the constant value is in radians/second
   return(0);
 }
 
- int	key_hook(int keycode, t_state *state)
+ int	key_hook(t_state *state)
 {
   t_data *img;
 
   img = &state->img;
    
-    if (keycode == 13)
+    if (state->up==1)
     {
-      printf("arriba es %d\n", keycode);
-      //move_up(img, worldMap);
       if(worldMap[(int)(img->posX + (img->dirX * img->moveSpeed))][(int)img->posY] == 0) 
         img->posX += img->dirX * img->moveSpeed;
       if(worldMap[(int)img->posX][(int)(img->posY + img->dirY * img->moveSpeed)] == 0) 
         img->posY += img->dirY * img->moveSpeed;
     }
-    if (keycode == 1)
+    if (state->down == 1)
     {  
-        printf("abajo es %d\n", keycode); 
-      //move_down(img, worldMap); 
       if(worldMap[(int)(img->posX - img->dirX * img->moveSpeed)][(int)img->posY] == 0)     
         img->posX -= img->dirX * img->moveSpeed;
       if(worldMap[(int)img->posX][(int)(img->posY - img->dirY * img->moveSpeed)] == 0)
         img->posY -= img->dirY * img->moveSpeed;
     }
-    if (keycode == 2)
-    {
-        printf("rotar derecha es %d\n", keycode);
+    if (state->right == 1)
       rotate_right(img);
-    }
-    if (keycode == 0)
-    {
-      printf("rotar izquierda es %d\n", keycode);
+    if (state->left==1)
       rotate_left(img);
-      double oldDirX = img->dirX;
-      img->dirX = img->dirX * cos(img->rotSpeed) - img->dirY * sin(img->rotSpeed);
-      img->dirY = oldDirX * sin(img->rotSpeed) + img->dirY * cos(img->rotSpeed);
-      double oldPlaneX = img->planeX;
-      img->planeX = img->planeX * cos(img->rotSpeed) - img->planeY * sin(img->rotSpeed);
-      img->planeY = oldPlaneX * sin(img->rotSpeed) + img->planeY * cos(img->rotSpeed);
-    }
-   printf("tecla pulsada es %d\n", keycode);
 	return (0);
 }
 
@@ -147,6 +125,10 @@ int	carlos_main(t_state *state)
   img->planeX = 0, img->planeY = 0.66; //the 2d raycaster version of camera planea
   img->Time = 0; //time of current frame
   img->Oldtime = 0; //time of previous frame
+  state->up = 0;
+  state->down = 0;
+  state->right = 0;
+  state->left = 0;
   
   load_textures(state);
   return (1);

@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:23:30 by manu              #+#    #+#             */
-/*   Updated: 2022/12/07 12:57:23 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/08 12:14:55 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,6 @@ enum {
 };
 
 int	on_key_pressed(int key, t_state *state);
- 
+int key_release(int key, t_state *state);
 int press_key(int keycode, t_state *state);
 #endif
