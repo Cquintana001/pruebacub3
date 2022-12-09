@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 08:33:21 by caquinta          #+#    #+#             */
-/*   Updated: 2022/12/08 12:28:44 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/09 09:23:14 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,14 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
+
 int	load_color_f_c(t_state *state)
 {
 	state->c = create_trgb(0, 234, 221, 202);
 	state->f = create_trgb(0, 0, 0, 250);
 	return (0);
 }
+
 int	assign_values(t_state *state)
 {
 	t_data	*img;
@@ -93,7 +95,7 @@ int	assign_values2(t_state *state)
 	return (0);
 }
 
-int	perform_DDA(t_state *state, int worldmap[mapWidth][mapHeight])
+int	perform_dda(t_state *state, int worldmap[mapWidth][mapHeight])
 {
 	while (state->hit == 0)
 	{
@@ -176,6 +178,7 @@ static int	draw_textures(t_state *state, int buffer[screenHeight][screenWidth])
 	buffer[state->y][state->x] = state->color;
 	return (0);
 }
+
 int	load_buffer(t_state *state, int buffer[screenHeight][screenWidth])
 {
 	t_data	*img;
@@ -196,27 +199,28 @@ int	load_buffer(t_state *state, int buffer[screenHeight][screenWidth])
 
 int	load_pixels(t_state *state, int buffer[screenHeight][screenWidth])
 {
-	int e = 0;
-	while (e < screenWidth)
+	int	e;
+	int	y;
+
+	e = -1;
+	while (++e < screenWidth)
 	{
-		int y = 0;
+		y = 0;
 		while (y < screenHeight)
 		{
 			my_mlx_pixel_put(&state->img, e, y, buffer[y][e]);
 			y++;
 		}
-		e++;
 	}
-	e = 0;
-	while (e < screenWidth)
+	e = -1;
+	while (++e < screenWidth)
 	{
-		int y = 0;
+		y = 0;
 		while (y < screenHeight)
 		{
 			buffer[y][e] = 0;
 			y++;
 		}
-		e++;
 	}
 	return (0);
 }

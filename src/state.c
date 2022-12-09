@@ -6,7 +6,7 @@
 /*   By: caquinta <caquinta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:25:32 by manu              #+#    #+#             */
-/*   Updated: 2022/11/29 11:19:19 by caquinta         ###   ########.fr       */
+/*   Updated: 2022/12/09 09:23:44 by caquinta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	init_state(t_state *state, char *map_file_name)
 	return (1);
 }
 
- 
 int	free_state(t_state *state)
 {
 	if (state->mlx && state->window)
@@ -36,7 +35,6 @@ int	free_state(t_state *state)
 		mlx_destroy(state->mlx);
 		state->mlx = NULL;
 	}
-
 	ft_memset(state, 0, sizeof(t_state));
 	return (1);
 }
